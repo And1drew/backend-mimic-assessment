@@ -67,7 +67,19 @@ def create_mimic_dict(filename):
                 "who" : ["knows"]
             }
     """
-    # +++your code here+++
+    with open(filename, 'r') as f:
+        mimic_dict = {}
+        wordlist = f.read().lower().split()
+        first_word = ""
+        for word in wordlist:
+            pair = {first_word: [word]}
+            if first_word in mimic_dict:
+                mimic_dict[first_word].append(word)
+            else:
+                mimic_dict.update(pair)
+            first_word = word
+    # print(mimic_dict)
+    return(mimic_dict)
 
 
 def print_mimic(mimic_dict, start_word):
@@ -77,14 +89,27 @@ def print_mimic(mimic_dict, start_word):
         - Randomly select a new word from the next-list
         - Repeat this process 200 times
     """
-    # +++your code here+++
+    mimic = start_word
+    new_word = mimic_dict[start_word]
+    i = 0
+    for i in range(200):
+        mimic = mimic + " " + (random.choice(new_word))
+        mimic_list = mimic.split(" ")
+        search_word = mimic_list[-1]
+        if search_word in mimic_dict:
+            new_word = mimic_dict[search_word]
+        else:
+            search_word = random.choice(mimic_list)
+            new_word = (mimic_dict[search_word])
+        i = i + 1
+    print(mimic)
     pass
 
 
 # Provided main(), calls mimic_dict() and mimic()
 def main():
     if len(sys.argv) != 2:
-        print 'usage: python mimic.py file-to-read'
+        print('usage: python mimic.py file-to-read')
         sys.exit(1)
 
     d = create_mimic_dict(sys.argv[1])
@@ -93,3 +118,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
